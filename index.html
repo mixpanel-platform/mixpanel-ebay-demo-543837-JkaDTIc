@@ -6,11 +6,47 @@
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
   </head>
   <body class="mixpanel-platform-body">
-    <h1>Hello, World!</h1>
     <script>
+      // assumes you have events 'Content searched' and 'Button clicked'
       MP.api.ready(function() {
-        // Run queries and display results here
+      var event_one = MP.api.segment('$signup', '$browser', {
+          from: moment().subtract(1, 'months'),
+          unit: 'day'
       });
+      var event_two = MP.api.segment('Item Won', '$city', {
+          from: moment().subtract(1, 'months'),
+          unit: 'day'
+      });
+  
+      $.when(event_one, event_two).done(function(searched, event_two) {
+          event_two = event_two.values();
+  
+          _.each(searched.values(), function(value, city) {
+              if (!event_two[city]) {
+                  return;
+              }
+  
+              $('<span>' + city + '</span>').css({
+                  'background': 'white',
+                  'border': '1px solid #7a8195',
+                  'border-radius': '5px',
+                  'color': '#7a8195',
+                  'display': 'inline-block',
+                  'margin-bottom': '20px',
+                  'margin-top': '10px',
+                  'padding': '10px'
+              }).appendTo('body');
+  
+              $('<div></div>').appendTo('body').MPChart({
+                  chartType: 'line',
+                  data: {
+                      'Content searched': value,
+                      'Button clicked': event_two[city]
+                  }
+              });
+          });
+      });
+    });
     </script>
   </body>
 </html>
