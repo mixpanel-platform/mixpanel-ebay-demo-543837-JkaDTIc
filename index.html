@@ -16,27 +16,30 @@
         
         var eventSelect_one = $('#eventSelect_one').MPEventSelect();
         var eventSelect_two = $('#eventSelect_two').MPEventSelect();
-        
+
+
       var runQuery = function(){
         var eventName_one = eventSelect_one.MPEventSelect('value'),
             eventName_two = eventSelect_two.MPEventSelect('value');
             
         if (eventName_one && eventName_two) {
-          var event_one = MP.api.segment('$signup', '$browser', {
-            from: moment().subtract(1, 'months'),
+          var event_one = MP.api.segment(eventName_one, '$browser', {
+            from_date: moment().subtract(1, 'months'),
+            to_date: moment(),
             unit: 'day'
             });
-          var event_two = MP.api.segment('Item Won', '$city', {
-            from: moment().subtract(1, 'months'),
+          var event_two = MP.api.segment(eventName_two, '$city', {
+            from_date: moment().subtract(1, 'months'),
+            to_date: moment(),
             unit: 'day'
             });
           }
         
-        $.when(event_one, event_two).done(function(searched, event_two) {
-          event_two = event_two.values();
+        $.when(event_one, event_two).done(function(one, two) {
+          two = event_two.values();
   
-          _.each(searched.values(), function(value, city) {
-              if (!event_two[city]) {
+          _.each(event_one.values(), function(value, city) {
+              if (!two[city]) {
                   return;
               }
   
@@ -55,17 +58,18 @@
                   chartType: 'line',
                   data: {
                       'Content searched': value,
-                      'Button clicked': event_two[city]
+                      'Button clicked': two[city]
                   }
               });
           });
         });
       }
-      eventSelect_one.on('change', function(e, eventName) {
+      
+      eventSelect_one.on('change', function(e, eventName_one) {
           runQuery();
       });
         
-      eventSelect_two.on('change', function(e, eventName) {
+      eventSelect_two.on('change', function(e, eventName_two) {
           runQuery();
       });
       
