@@ -33,9 +33,8 @@
             });
           }
         }
-      });
-      
-      $.when(event_one, event_two).done(function(searched, event_two) {
+        
+        $.when(event_one, event_two).done(function(searched, event_two) {
           event_two = event_two.values();
   
           _.each(searched.values(), function(value, city) {
@@ -62,6 +61,8 @@
                   }
               });
           });
+        });
+      
       });
     
       dateSelect.on('change', function(e, dateRange) {
