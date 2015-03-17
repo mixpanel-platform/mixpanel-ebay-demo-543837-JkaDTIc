@@ -16,7 +16,6 @@
         
         var eventSelect_one = $('#eventSelect_one').MPEventSelect();
         var eventSelect_two = $('#eventSelect_two').MPEventSelect();
-        var dateSelect  = $('#dateSelect').MPDatepicker();
         
       var runQuery = function(){
         var eventName_one = eventSelect_one.MPEventSelect('value'),
@@ -62,10 +61,6 @@
           });
         });
       }
-      });
-    
-      dateSelect.on('change', function(e, dateRange) {
-          runQuery();
       });
               
       eventSelect_one.on('change', function(e, eventName) {
