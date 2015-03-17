@@ -32,7 +32,6 @@
             unit: 'day'
             });
           }
-        }
         
         $.when(event_one, event_two).done(function(searched, event_two) {
           event_two = event_two.values();
@@ -62,7 +61,7 @@
               });
           });
         });
-      
+      }
       });
     
       dateSelect.on('change', function(e, dateRange) {
@@ -70,11 +69,11 @@
       });
               
       eventSelect_one.on('change', function(e, eventName) {
-        runQuery();
+          runQuery();
       });
         
       eventSelect_two.on('change', function(e, eventName) {
-        runQuery();
+          runQuery();
       });
         
     </script>
