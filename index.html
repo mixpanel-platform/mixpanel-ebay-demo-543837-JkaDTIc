@@ -6,18 +6,35 @@
     <script src="https://cdn.mxpnl.com/libs/mixpanel-platform/build/mixpanel-platform.v0.latest.min.js"></script>
   </head>
   <body class="mixpanel-platform-body">
+    <div id="by" class="mixpanel-platform-label" style="margin-left: 10px; display: none;">by</div>
+    <div id="propSelect" style="float: left;"></div>
+    <div id="eventSelect_one" style="float: left;"></div>
+    <div id="eventSelect_two" style="float: left;"></div>
     <script>
       // assumes you have events 'Content searched' and 'Button clicked'
       MP.api.ready(function() {
-      var event_one = MP.api.segment('$signup', '$browser', {
-          from: moment().subtract(1, 'months'),
-          unit: 'day'
+        
+        var eventSelect_one = $('#eventSelect_one').MPEventSelect();
+        var eventSelect_two = $('#eventSelect_two').MPEventSelect();
+        var dateSelect  = $('#dateSelect').MPDatepicker();
+        
+      var runQuery = function(){
+        var eventName_one = eventSelect_one.MPEventSelect('value'),
+            eventName_two = eventSelect_two.MPEventSelect('value');
+            
+        if (eventName_one && eventName_two) {
+          var event_one = MP.api.segment('$signup', '$browser', {
+            from: moment().subtract(1, 'months'),
+            unit: 'day'
+            });
+          var event_two = MP.api.segment('Item Won', '$city', {
+            from: moment().subtract(1, 'months'),
+            unit: 'day'
+            });
+          }
+        }
       });
-      var event_two = MP.api.segment('Item Won', '$city', {
-          from: moment().subtract(1, 'months'),
-          unit: 'day'
-      });
-  
+      
       $.when(event_one, event_two).done(function(searched, event_two) {
           event_two = event_two.values();
   
@@ -46,7 +63,19 @@
               });
           });
       });
-    });
+    
+      dateSelect.on('change', function(e, dateRange) {
+          runQuery();
+      });
+              
+      eventSelect_one.on('change', function(e, eventName) {
+        runQuery();
+      });
+        
+      eventSelect_two.on('change', function(e, eventName) {
+        runQuery();
+      });
+        
     </script>
   </body>
 </html>
